@@ -3,6 +3,22 @@
  * Paired with rtl-fix.js, which tags RTL text blocks with dir="auto".
  */
 
+/* Vazirmatn (the maintained Vazir font) - SIL OFL 1.1, see fonts/OFL.txt.
+   Variable weight axis, so one file covers 100-900. */
+@font-face {
+	font-family: "Vazirmatn";
+	src: url("./fonts/rtl-fix-font.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+:root {
+	--cc-rtl-font: "Vazirmatn", "Vazir", "Tahoma", "Segoe UI", system-ui, sans-serif;
+}
+
+/* --- direction ------------------------------------------------------------ */
+
 /* Elements the script tagged get start alignment for their resolved direction,
    so Persian paragraphs sit on the right instead of inheriting text-align:left. */
 [dir="auto"] {
@@ -35,4 +51,30 @@ samp,
 [dir="rtl"] kbd,
 [dir="rtl"] samp {
 	text-align: left;
+}
+
+/* --- Persian / Arabic / Hebrew font --------------------------------------- */
+
+/* Vazirmatn for content whose resolved direction is RTL. :dir(rtl) evaluates the
+   *computed* direction, so it correctly covers dir="auto" blocks and the
+   composer as their content changes. Latin-only UI keeps the app's own font. */
+[dir="rtl"],
+[dir="auto"]:dir(rtl),
+[contenteditable="true"]:dir(rtl),
+[contenteditable=""]:dir(rtl),
+textarea:dir(rtl),
+input:dir(rtl) {
+	font-family: var(--cc-rtl-font);
+}
+
+/* Code stays monospace even when it sits inside RTL content. */
+[dir="rtl"] pre,
+[dir="rtl"] code,
+[dir="rtl"] kbd,
+[dir="rtl"] samp,
+[dir="auto"]:dir(rtl) pre,
+[dir="auto"]:dir(rtl) code,
+[dir="auto"]:dir(rtl) kbd,
+[dir="auto"]:dir(rtl) samp {
+	font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }

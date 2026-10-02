@@ -42,6 +42,9 @@ $bak = Join-Path $renderer ".index.html.rtl-fix.bak"
 if (-not (Test-Path $bak)) { Copy-Item -LiteralPath $index -Destination $bak }
 Copy-Item -LiteralPath (Join-Path $Assets "rtl-fix.css") -Destination (Join-Path $renderer "rtl-fix.css") -Force
 Copy-Item -LiteralPath (Join-Path $Assets "rtl-fix.js") -Destination (Join-Path $renderer "rtl-fix.js") -Force
+$fontsDir = Join-Path $renderer "fonts"
+New-Item -ItemType Directory -Force -Path $fontsDir | Out-Null
+Copy-Item -LiteralPath (Join-Path $Assets "fonts\rtl-fix-font.woff2") -Destination (Join-Path $fontsDir "rtl-fix-font.woff2") -Force
 
 $html = Get-Content -LiteralPath $index -Raw
 if ($html -notmatch "\./rtl-fix\.css") {

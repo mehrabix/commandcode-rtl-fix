@@ -50,6 +50,8 @@ fi
 [ -f "$RENDERER/.index.html.rtl-fix.bak" ] || cp -a "$RENDERER/index.html" "$RENDERER/.index.html.rtl-fix.bak"
 cp -a "$ASSETS/rtl-fix.css" "$RENDERER/rtl-fix.css"
 cp -a "$ASSETS/rtl-fix.js" "$RENDERER/rtl-fix.js"
+install -d "$RENDERER/fonts"
+cp -a "$ASSETS/fonts/rtl-fix-font.woff2" "$RENDERER/fonts/rtl-fix-font.woff2"
 perl "$ASSETS/inject.pl" "$RENDERER/index.html"
 
 echo

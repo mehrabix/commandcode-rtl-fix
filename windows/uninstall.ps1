@@ -36,6 +36,12 @@ foreach ($f in @("rtl-fix.css", "rtl-fix.js")) {
 	$p = Join-Path $renderer $f
 	if (Test-Path $p) { Remove-Item -LiteralPath $p -Force }
 }
+$font = Join-Path $renderer "fonts\rtl-fix-font.woff2"
+if (Test-Path $font) { Remove-Item -LiteralPath $font -Force }
+$fontsDir = Join-Path $renderer "fonts"
+if ((Test-Path $fontsDir) -and -not (Get-ChildItem -LiteralPath $fontsDir -Force)) {
+	Remove-Item -LiteralPath $fontsDir -Force
+}
 
 Write-Host "RTL fix removed from: $renderer"
 Write-Host "Restart Command Code."

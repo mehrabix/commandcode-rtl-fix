@@ -31,11 +31,18 @@ const expect = {
 	composer: ["auto", "rtl", "start"], ta: ["auto", "rtl", "start"],
 	inp: ["auto", "rtl", "start"], dyn: ["auto", "rtl", "start"],
 };
+// Elements whose resolved direction is RTL should use Vazirmatn.
+const rtlFont = new Set(["p_fa", "p_mix", "li_fa", "composer", "ta", "inp", "dyn"]);
+let fontLoaded = false;
 for (const r of rows) {
 	const e = expect[r.id];
-	const ok = !e || (String(r.dir) === String(e[0]) && r.dirComputed === e[1] && r.align === e[2]);
+	let ok = !e || (String(r.dir) === String(e[0]) && r.dirComputed === e[1] && r.align === e[2]);
+	if (rtlFont.has(r.id) && !/Vazirmatn/.test(r.font)) ok = false;
+	if (!rtlFont.has(r.id) && e && /Vazirmatn/.test(r.font)) ok = false;
+	if (r.fontLoaded) fontLoaded = true;
 	if (!ok) failed++;
-	console.log(`${ok ? "ok  " : "FAIL"}  ${String(r.id).padEnd(9)} dir=${String(r.dir).padEnd(5)} computed=${r.dirComputed.padEnd(4)} align=${r.align}`);
+	console.log(`${ok ? "ok  " : "FAIL"}  ${String(r.id).padEnd(9)} dir=${String(r.dir).padEnd(5)} computed=${r.dirComputed.padEnd(4)} align=${r.align.padEnd(6)} font=${/Vazirmatn/.test(r.font) ? "vazirmatn" : "default"}`);
 }
+if (!fontLoaded) { console.error("FAIL  Vazirmatn font file did not load"); failed++; }
 process.exit(failed ? 1 : 0);
 ' "$DOM"

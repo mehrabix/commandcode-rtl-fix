@@ -32,7 +32,8 @@ if [ -f "$RENDERER/.index.html.rtl-fix.bak" ]; then
 	cp -a "$RENDERER/.index.html.rtl-fix.bak" "$RENDERER/index.html"
 	rm -f "$RENDERER/.index.html.rtl-fix.bak"
 fi
-rm -f "$RENDERER/rtl-fix.css" "$RENDERER/rtl-fix.js"
+rm -f "$RENDERER/rtl-fix.css" "$RENDERER/rtl-fix.js" "$RENDERER/fonts/rtl-fix-font.woff2"
+rmdir "$RENDERER/fonts" 2>/dev/null || true
 
 echo "RTL fix removed from: $RENDERER"
 echo "Restart Command Code."

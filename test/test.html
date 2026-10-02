@@ -48,6 +48,8 @@ const x = 1;</code></pre>
 						dir: el.getAttribute("dir"),
 						dirComputed: cs.direction,
 						align: cs.textAlign,
+						font: cs.fontFamily,
+						fontLoaded: document.fonts ? document.fonts.check("16px Vazirmatn") : false,
 					};
 				});
 				var report = document.createElement("pre");
