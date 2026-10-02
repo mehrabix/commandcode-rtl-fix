@@ -15,6 +15,11 @@
 			<p id="p_fa">سلام، این یک پیام آزمایشی فارسی است.</p>
 			<p id="p_en">Hello, this is an English paragraph.</p>
 			<p id="p_mix">تابع زیر را ببین: <code>const total = items.length;</code></p>
+			<p id="p_mix_fa_first">Error: خطای اتصال به سرور رخ داد.</p>
+			<p id="p_mix_en_first">Failed: دریافت پاسخ از سرور ناموفق بود و درخواست لغو شد.</p>
+			<p id="p_en_majority">Run the build then check logs - پیام خطا را ببینید</p>
+			<p id="p_path">فایل /home/user/app.ts در خط 42 خطا داد: TypeError.</p>
+			<p id="p_flip">متن اولیهٔ فارسی برای تست تغییر جهت</p>
 			<ul id="list">
 				<li id="li_fa">مورد اول در فهرست</li>
 				<li id="li_en">second item</li>
@@ -38,8 +43,14 @@ const x = 1;</code></pre>
 				document.getElementById("m1").appendChild(p);
 			}, 100);
 
+			// Simulate React replacing RTL content with English in the same node:
+			// the fix must drop the now-stale dir attribute.
 			setTimeout(function () {
-				var ids = ["p_fa", "p_en", "p_mix", "li_fa", "li_en", "pre_fa", "composer", "ta", "inp", "dyn"];
+				document.getElementById("p_flip").textContent = "This node became English only.";
+			}, 250);
+
+			setTimeout(function () {
+				var ids = ["p_fa", "p_en", "p_mix", "p_mix_fa_first", "p_mix_en_first", "p_en_majority", "p_path", "p_flip", "li_fa", "li_en", "pre_fa", "composer", "ta", "inp", "dyn"];
 				var out = ids.map(function (id) {
 					var el = document.getElementById(id);
 					var cs = getComputedStyle(el);

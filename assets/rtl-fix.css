@@ -20,8 +20,12 @@
 /* --- direction ------------------------------------------------------------ */
 
 /* Elements the script tagged get start alignment for their resolved direction,
-   so Persian paragraphs sit on the right instead of inheriting text-align:left. */
-[dir="auto"] {
+   so Persian paragraphs sit on the right instead of inheriting the app's
+   text-align:left. The script sets dir="rtl"/"ltr" (dominant-script) or
+   dir="auto" (text fields), so all three are matched. */
+[dir="auto"],
+[dir="rtl"],
+[dir="ltr"] {
 	text-align: start;
 }
 

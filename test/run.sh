@@ -25,14 +25,23 @@ if (!m) { console.error("no report found"); process.exit(1); }
 const rows = JSON.parse(m[1]);
 let failed = 0;
 const expect = {
-	p_fa: ["auto", "rtl", "start"], p_en: [null, "ltr", "left"],
-	p_mix: ["auto", "rtl", "start"], li_fa: ["auto", "rtl", "start"],
+	p_fa: ["rtl", "rtl", "start"], p_en: [null, "ltr", "left"],
+	p_mix: ["rtl", "rtl", "start"], li_fa: ["rtl", "rtl", "start"],
 	li_en: [null, "ltr", "left"], pre_fa: [null, "ltr", "left"],
 	composer: ["auto", "rtl", "start"], ta: ["auto", "rtl", "start"],
-	inp: ["auto", "rtl", "start"], dyn: ["auto", "rtl", "start"],
+	inp: ["auto", "rtl", "start"], dyn: ["rtl", "rtl", "start"],
+	// A Persian-majority sentence that starts with a Latin word must still
+	// resolve to RTL; an English-majority line with a Persian phrase stays LTR.
+	p_mix_fa_first: ["rtl", "rtl", "start"],
+	p_mix_en_first: ["rtl", "rtl", "start"],
+	p_en_majority: ["ltr", "ltr", "start"],
+	// A long Latin path/identifier must not out-vote the Persian prose.
+	p_path: ["rtl", "rtl", "start"],
+	// Content that changed from Persian to English must drop the stale dir.
+	p_flip: [null, "ltr", "left"],
 };
 // Elements whose resolved direction is RTL should use Vazirmatn.
-const rtlFont = new Set(["p_fa", "p_mix", "li_fa", "composer", "ta", "inp", "dyn"]);
+const rtlFont = new Set(["p_fa", "p_mix", "p_mix_fa_first", "p_mix_en_first", "p_path", "li_fa", "composer", "ta", "inp", "dyn"]);
 let fontLoaded = false;
 for (const r of rows) {
 	const e = expect[r.id];

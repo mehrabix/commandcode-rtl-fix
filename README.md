@@ -23,7 +23,7 @@ A few small files are added to the app's renderer and referenced from its
 
 | File | Purpose |
 | --- | --- |
-| `assets/rtl-fix.js` | Tags text blocks that contain RTL characters with `dir="auto"`, so each block resolves its own direction and aligns to the correct edge. Latin-only UI is untouched, code is excluded, and it re-scans on DOM changes (streaming messages, new turns). |
+| `assets/rtl-fix.js` | Sets each RTL-containing block's base direction from its **dominant script** (RTL vs Latin *word* counts) instead of the browser's first-strong `dir="auto"` rule — so a Persian sentence that begins with a Latin word (`Error: …`) still lays out RTL, while English-majority content stays LTR. Code is excluded, Latin-only UI is untouched, and it re-scans on DOM changes (streaming messages, new turns). |
 | `assets/rtl-fix.css` | Start-alignment for tagged blocks, per-paragraph direction (`unicode-bidi: plaintext`) for the composer and text fields, the Persian font for RTL-resolved content, and forced left-to-right for code / terminal / editor surfaces. |
 | `assets/fonts/rtl-fix-font.woff2` | The Persian font (Vazirmatn, variable 100–900), applied only to content whose direction resolves to RTL. |
 | `assets/inject.pl` | Inserts the `<link>` and `<script>` tags into `index.html` idempotently. |
@@ -112,12 +112,17 @@ with `npx @electron/asar` — the installer detects this case and tells you.
 ## Verification
 
 The direction logic was validated in headless Chrome (`test/test.html`,
-`test/run.sh`): Persian paragraphs/lists and the composer get `dir="auto"` →
-`rtl` with `text-align: start`; English content stays `ltr`/left; a Persian
-paragraph containing inline `<code>` is handled; `pre`/`code`, terminals and
-editors stay LTR; dynamically inserted (React re-rendered) content is picked up
-by the MutationObserver; and the Vazirmatn font file loads and is applied only
-to RTL content.
+`test/run.sh`): Persian paragraphs/lists get `dir="rtl"` with `text-align: start`;
+English content stays `ltr`/left; **mixed** content resolves by dominant script —
+a Persian sentence that starts with a Latin word (`Error: …`, `Failed: …`) or
+contains a long Latin path/identifier still resolves to RTL, while an
+English-majority line with a Persian phrase stays LTR; a Persian paragraph
+containing inline `<code>` is handled; the composer/textarea/input keep
+`dir="auto"` with per-paragraph `plaintext`; `pre`/`code`, terminals and editors
+stay LTR; dynamically inserted (React re-rendered) content is picked up by the
+MutationObserver, and a node whose text changes from Persian to English drops the
+now-stale direction on re-scan; and the Vazirmatn font file loads and is applied
+only to RTL content.
 
 ```bash
 bash test/run.sh
@@ -127,6 +132,11 @@ bash test/run.sh
 
 - Interface strings stay English/Chinese; this only fixes the **direction of
   content** you read and type, not translation.
+- Inside RTL text, Latin words, numbers and code stay LTR as isolated runs (the
+  Unicode bidi algorithm). A neutral character that sits immediately before such
+  a run and is written as plain text (e.g. the leading `/` of a path) is placed
+  by the algorithm's neutral-resolution rules — keep paths inside `code` or tool
+  output for pixel-exact placement.
 - It edits files owned by the installer; keep the backup so uninstall is clean.
 - Not affiliated with Command Code.
 
