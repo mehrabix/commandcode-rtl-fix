@@ -1,5 +1,7 @@
 # Command Code Desktop — RTL fix
 
+<img width="1492" height="896" alt="Screenshot From 2026-10-02 11-18-41" src="https://github.com/user-attachments/assets/d5afc43f-ca5b-4bda-9d8f-6c85a02ff1e8" />
+
 Makes **Persian / Arabic / Hebrew** text render right-to-left inside the
 [Command Code](https://commandcode.ai/) desktop app.
 
