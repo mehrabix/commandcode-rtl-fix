@@ -1,0 +1,38 @@
+/*
+ * Command Code desktop - RTL content fix (styles).
+ * Paired with rtl-fix.js, which tags RTL text blocks with dir="auto".
+ */
+
+/* Elements the script tagged get start alignment for their resolved direction,
+   so Persian paragraphs sit on the right instead of inheriting text-align:left. */
+[dir="auto"] {
+	text-align: start;
+}
+
+/* Composer / text fields: resolve direction from the first strong character of
+   each paragraph (plaintext) instead of a single fixed direction. */
+[contenteditable="true"],
+[contenteditable=""],
+textarea[dir="auto"],
+input[dir="auto"] {
+	unicode-bidi: plaintext;
+}
+
+/* Code, terminals and editors must stay left-to-right even inside RTL content. */
+pre,
+code,
+kbd,
+samp,
+.monaco-editor,
+.xterm,
+.xterm-viewport {
+	direction: ltr;
+	unicode-bidi: isolate;
+}
+
+[dir="rtl"] pre,
+[dir="rtl"] code,
+[dir="rtl"] kbd,
+[dir="rtl"] samp {
+	text-align: left;
+}
